@@ -221,7 +221,7 @@ void controlIntake() {
 
 void controlCascadeSpool() {
     double position_deg = cascade.get_position();
-    double TOP_LIMIT = -2800.0;
+    double TOP_LIMIT = -3200.0;
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
           if (bumper.get_value() == 1) {
             cascade.brake(); 
