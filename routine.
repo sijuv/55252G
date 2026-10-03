@@ -1,0 +1,66 @@
+#include "main.h"
+
+// 1. Define your 20 routines
+void step_1()  { pros::lcd::print(3, "Running Step 1");  }
+void step_2()  { pros::lcd::print(3, "Running Step 2");  }
+void step_3()  { pros::lcd::print(3, "Running Step 3");  }
+void step_4()  { pros::lcd::print(3, "Running Step 4");  }
+void step_5()  { pros::lcd::print(3, "Running Step 5");  }
+void step_6()  { pros::lcd::print(3, "Running Step 6");  }
+void step_7()  { pros::lcd::print(3, "Running Step 7");  }
+void step_8()  { pros::lcd::print(3, "Running Step 8");  }
+void step_9()  { pros::lcd::print(3, "Running Step 9");  }
+void step_10() { pros::lcd::print(3, "Running Step 10"); }
+void step_11() { pros::lcd::print(3, "Running Step 11"); }
+void step_12() { pros::lcd::print(3, "Running Step 12"); }
+void step_13() { pros::lcd::print(3, "Running Step 13"); }
+void step_14() { pros::lcd::print(3, "Running Step 14"); }
+void step_15() { pros::lcd::print(3, "Running Step 15"); }
+void step_16() { pros::lcd::print(3, "Running Step 16"); }
+void step_17() { pros::lcd::print(3, "Running Step 17"); }
+void step_18() { pros::lcd::print(3, "Running Step 18"); }
+void step_19() { pros::lcd::print(3, "Running Step 19"); }
+void step_20() { pros::lcd::print(3, "Running Step 20"); }
+
+// 2. Create an array of function pointers
+// We pad index 0 with a nullptr so that step_1 aligns with index [1].
+typedef void (*RoutineFunction)();
+
+RoutineFunction routines[21] = {
+    nullptr, // Index 0 (unused)
+    step_1, step_2, step_3, step_4, step_5,
+    step_6, step_7, step_8, step_9, step_10,
+    step_11, step_12, step_13, step_14, step_15,
+    step_16, step_17, step_18, step_19, step_20
+};
+
+void opcontrol() {
+    pros::Controller master(pros::E_CONTROLLER_MASTER);
+    
+    int current_step = 1;
+    
+    // Print and run the initial step on startup
+    pros::lcd::print(2, "Current Step: %d", current_step);
+    routines[current_step](); 
+
+    while (true) {
+        // UP BUTTON: Increment step and execute
+        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+            if (current_step < 20) {
+                current_step++;
+                pros::lcd::print(2, "Current Step: %d", current_step);
+                routines[current_step](); // Call the mapped function
+            }
+        } 
+        // DOWN BUTTON: Decrement step and execute
+        else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            if (current_step > 1) {
+                current_step--;
+                pros::lcd::print(2, "Current Step: %d", current_step);
+                routines[current_step](); // Call the mapped function
+            }
+        }
+
+        pros::delay(20);
+    }
+}
